@@ -1,1 +1,24 @@
-html for editing
+{% extends "base.html.twig" %}
+
+{% block body %}
+	<div class="container mx-auto my-12 border-b border-gray-400 pb-4">
+		<h1 class="text-5xl font-semibold mb-4">Edit Blog Post</h1>
+	</div>
+
+	<div class="container mx-auto">
+		<form method="POST" action="{{ path('posts.edit', {id:1}) }}">
+			<div class="flex flex-col mb-8">
+				<label>Post Title</label>
+				<input type="text" value="Post Title" placeholder="Post Title" name="post-title" id="post-title" class="border rounded-md border-gray-400 p-4 mt-4"/>
+				<div class="text-red-600 pl-4 mt-1">Error Message</div>
+			</div>
+			<div class="flex flex-col mb-8">
+				<label>Post Content</label>
+				<textarea rows="8" value="Post Content" placeholder="Post Content" name="post-content" id="post-content" class="border rounded-md border-gray-400 p-4 mt-4"></textarea>
+				<div class="text-red-600 pl-4 mt-1">Error Message</div>
+			</div>
+
+            <button class="mt-4 w-full bg-sky-200 p-4 rounded-md hover:bg-sky-300">Save Post</button>
+		</form>
+	</div>
+{% endblock %}

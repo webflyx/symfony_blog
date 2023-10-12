@@ -1,0 +1,16 @@
+<div class="relative">
+	<div class="flex gap-2 items-center">
+		{{ include ("svg/search.html.twig", {w: '20', h: '20'}) }}
+		<input class="border-b border-gray-300 px-2 py-1" type="text" name="search" placeholder="Search..."/>
+	</div>
+    <div class="absolute t-0 l-0 w-full bg-white py-4 px-2 shadow-md">
+        <ul class="flex flex-col gap-3 ">
+            <li class="border-b border-transparent hover:border-gray-300">
+                <a href="#">Post name</a>
+            </li>
+            <li class="border-b border-transparent hover:border-gray-300">
+                <a href="#">Post name</a>
+            </li>
+        </ul>
+    </div>
+</div>

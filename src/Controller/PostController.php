@@ -14,30 +14,30 @@ class PostController extends AbstractController
         return $this->render('post/index.html.twig');
     }
 
-    #[Route('/post/new', methods:['GET', 'POST'], name: 'posts.new')]
+    #[Route('/post/new', methods:['GET', 'POST'], name: 'posts.new', priority:2)]
     public function new(): Response
     {
         return $this->render('post/new.html.twig');
     }
 
-    #[Route('/post/{id}/edit', methods:['GET', 'POST'], name: 'posts.edit')]
+    #[Route('/post/{id}/edit', methods:['GET', 'POST'], name: 'posts.edit', priority:2)]
     public function edit(): Response
     {
         //return $this->redirectToRoute('posts.index');
         return $this->render('post/edit.html.twig');
     }
 
-    #[Route('/post/{id}/delete', methods:[']\'POST'], name: 'posts.delete')]
+    #[Route('/post/{id}/delete', methods:[']\'POST'], name: 'posts.delete', priority:2)]
     public function delete(): Response
     {
         //return $this->redirectToRoute('posts.index');
         return new Response('Post Deleted');
     }
 
-    #[Route('/post/{id}', methods:['GET'], name: 'posts.show')]
+    #[Route('/post/{id}', methods:['GET'], name: 'posts.single')]
     public function show($id): Response
     {
-        return $this->render('post/show.html.twig', [
+        return $this->render('post/single.html.twig', [
             'id' => $id
         ]);
     }

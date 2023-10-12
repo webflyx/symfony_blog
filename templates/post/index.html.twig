@@ -1,6 +1,24 @@
 {% extends "base.html.twig" %}
 
 {% block body %}
+	<div class="container mx-auto my-12 border-b border-gray-400 pb-4">
+		<h1 class="text-5xl font-semibold mb-4">Latest Posts</h1>
+		<div class="text-gray-600">Blog created with Symfony & Tailwind CSS</div>
+	</div>
 
+	<div class="container mx-auto">
+		<div class="border-b border-gray-400 pb-4 flex gap-10 mt-12">
+			<div>DATE/IMAGE</div>
+			<div>
+				<h2 class="font-medium text-3xl mb-4">Post Title</h2>
+				<p class="text-gray-700">Ullamco consequat tempor esse laboris minim et culpa eiusmod consectetur do.</p>
+				<a href="{{ path('posts.single', {id: 1}) }}" class="mt-6 block text-red-700 py-5 hover:underline">Read More &rarr;</a>
+
+				<div class="mt-2 flex items-center gap-4">
+					<a href="{{ path('posts.edit', {id: 1}) }}">{{ include("svg/edit.html.twig", {w: 20, h:20}) }}</a>
+					<a href="{{ path('posts.delete', {id: 1}) }}">{{ include("svg/trash.html.twig", {w: 20, h:20}) }}</a>
+				</div>
+			</div>
+		</div>
+	</div>
 {% endblock %}
-
