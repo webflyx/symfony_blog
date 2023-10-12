@@ -1,17 +1,75 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
-        <script src="https://cdn.tailwindcss.com"></script>
-        {% block stylesheets %}
-        {% endblock %}
+	<head>
+		<meta charset="UTF-8">
+		<title>
+			{% block title %}Welcome!
+			{% endblock %}
+		</title>
+		<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<script src="https://cdn.tailwindcss.com"></script>
+		{% block stylesheets %}{% endblock %}
+		{{ encore_entry_link_tags('app') }}
 
-        {% block javascripts %}
-        {% endblock %}
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-    </body>
+		{% block javascripts %}{% endblock %}
+		{{ encore_entry_script_tags('app') }}
+	</head>
+	<body
+		class="container max-w-7xl mx-auto">
+		{# header #}
+		<header class="flex justify-between items-center p-4">
+			<div class="flex items-center gap-4">
+				{% include "svg/logo.html.twig" %}
+				<a class="text-2xl font-medium text-gray-700" href="{{ path('posts.index') }}">Symfony Blog</a>
+
+				search bar
+			</div>
+
+			<div id="main-menu" class="absolute top-24 gap-4 items-center hidden md:flex md:relative md:top-0">
+				<div>
+					<span>Logged as:</span>
+					<a href="#">Jonh Smith</a>
+				</div>
+				<div>
+					<a href="{{ path('posts.new') }}">New Post</a>
+				</div>
+				<div>
+					<a href="#">Login</a>
+				</div>
+				<div>
+					<a href="#">Register</a>
+				</div>
+			</div>
+
+			<div id="hamburger" class="flex flex-col gap-3 md:hidden">
+				<div class="w-10 h-0.5 bg-gray-500"></div>
+				<div class="w-10 h-0.5 bg-gray-500"></div>
+			</div>
+
+		</header>
+		{# header end #}
+		{% block body %}{% endblock %}
+
+		{# footer #}
+		<footer class="w-full py-2 px-4 bg-gray-200">
+			<div class="text-center">
+				@
+				{{ 'now'|date('Y') }}
+				Symfony Blog
+			</div>
+		</footer>
+		{# footer end #}
+
+		{# notification #}
+		<div class="absolute top-0 w-full bg-indigo-300 text-center py-2 px-6 flex">
+			<span class="mr-2">
+				<strong>Info:
+				</strong>
+			</span>
+			<span>New blog post has been written</span>
+			<span class="ml-auto">X</span>
+		</div>
+		{# notification end #}
+	</body>
 </html>
