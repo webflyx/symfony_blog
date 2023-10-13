@@ -1,7 +1,7 @@
 <div class="text-xl font-medium mb-2">Profile Info</div>
 <div class="text-gray-600 mb-6">Update your profile info</div>
 
-<form action="{{ path('app_profile') }}" method="POST">
+<form action="{{ path('app_profile', {id:app.user.id}) }}" method="POST">
 	<div class="flex flex-col mb-8">
 		<label>Name</label>
 		<input type="text" value="OLD VALUE" placeholder="Peter" name="profile-name" id="profile-name" class="border rounded-md border-gray-400 p-4 mt-4"/>

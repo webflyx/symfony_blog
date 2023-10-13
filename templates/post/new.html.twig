@@ -6,19 +6,21 @@
 	</div>
 
 	<div class="container mx-auto">
-		<form method="POST" action="{{ path('posts.edit', {id:1}) }}">
-			<div class="flex flex-col mb-8">
-				<label>Post Title</label>
-				<input type="text" value="Post Title" placeholder="Post Title" name="post-title" id="post-title" class="border rounded-md border-gray-400 p-4 mt-4"/>
-				<div class="text-red-600 pl-4 mt-1">Error Message</div>
-			</div>
-			<div class="flex flex-col mb-8">
-				<label>Post Content</label>
-				<textarea rows="8" value="Post Content" placeholder="Post Content" name="post-content" id="post-content" class="border rounded-md border-gray-400 p-4 mt-4"></textarea>
-				<div class="text-red-600 pl-4 mt-1">Error Message</div>
-			</div>
+		{{ form_start(form) }}
+		<div>
+			{% set title_error = form_errors(form.title) ? 'text-red-600' : '' %}
+			{{ form_label(form.title, 'Post Title', {'label_attr':{'class': (title_error)~' block text-sm text-gray-700 font-medium'}}) }}
+			{{ form_widget(form.title, { 'attr': {'class': 'block w-full shadow-sm border border-gray-300 mt-1 p-2 rounded-sm'} })}}
+			 <div class="text-red-600">{{ form_errors(form.title) }}</div>
+		</div>
+		<div>
+			{% set content_error = form_errors(form.content) ? 'text-red-600' : '' %}
+			{{ form_label(form.content, 'Post Content', {'label_attr':{'class':(title_error)~' block text-sm text-gray-700 font-medium mt-3'}}) }}
+			{{ form_widget(form.content, { 'attr': {'rows': 8, 'class': 'block w-full shadow-sm border border-gray-300 mt-1 p-2 rounded-sm'} })}}
+            <div class="text-red-600">{{ form_errors(form.content) }}</div>
+		</div>
 
-            <button class="mt-4 w-full bg-sky-200 p-4 rounded-md hover:bg-sky-300">Save Post</button>
-		</form>
+		<button type="submit" class="mt-4 w-full bg-sky-200 p-4 rounded-md hover:bg-sky-300">Add Post</button>
+		{{ form_end(form) }}
 	</div>
 {% endblock %}

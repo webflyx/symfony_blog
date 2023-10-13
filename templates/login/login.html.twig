@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Login
+{% endblock %}
+
+{% block body %}
+	<div class="container mx-auto my-12 border-b border-gray-400 pb-4">
+		<h1 class="text-5xl font-semibold mb-4">Login</h1>
+	</div>
+
+	<div class="container mx-auto">
+		<form action="{{ path('app_login') }}" method="POST">
+
+			<div>
+				<label class="block text-sm text-gray-700 font-medium">Email</label>
+				<input type="email" name="_username" value="{{ lastUsername }}" class="block w-full shadow-sm border border-gray-300 mt-1 p-2 rounded-sm"/>
+			</div>
+			<div class="mt-3">
+				<label class="block text-sm text-gray-700 font-medium">Password</label>
+				<input type="password" name="_password" class="block w-full shadow-sm border border-gray-300 mt-1 p-2 rounded-sm"/>
+			</div>
+
+			<input type="hidden" name="_target_path" value={{ path('app_dashboard') }}/>
+
+			{% if error %}
+				<div class="text-red-600">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+			{% endif %}
+
+			<button type="submit" class="mt-4 w-full bg-sky-200 p-4 rounded-md hover:bg-sky-300">Login</button>
+
+		</form>
+
+		<div class="mt-2 text-center">
+			<span>Dont have account?</span>
+			<a class="font-bold" href="{{ path('app_register') }}">Register</a>
+		</div>
+	</div>
+{% endblock %}
