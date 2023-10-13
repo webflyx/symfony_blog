@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block body %}
+	<div class="container mx-auto my-12 border-b border-gray-400 pb-4">
+		<h1 class="text-5xl font-semibold mb-4">Dashboard</h1>
+	</div>
+	<div class="container mx-auto">
+		<div>You're logged in! <a href="{{ path('app_profile') }}" class="font-medium text-sky-800 underline">Your Profile</a></div>
+
+		<div class="mt-10">
+
+			<div class="flex mb-6 gap-6 border-b border-gray-300">
+				<span id="profile-tab-followers" class="profile-tab text-2xl cursor-pointer border-b-2 border-sky-500 text-sky-500 hover:text-sky-500">Followers</span>
+				<span id="profile-tab-follow" class="profile-tab text-2xl cursor-pointer border-b border-transparent hover:text-sky-500">Following</span>
+				<span id="profile-tab-liked" class="profile-tab text-2xl cursor-pointer border-b border-transparent hover:text-sky-500">Liked Posts</span>
+			</div>
+
+			<div>
+				<div id="profile-followers" class="profile-content">
+					<div class="font-medium text-xl mb-2">People that follow you:</div>
+					<ul>
+						<li><a href="#" class="text-lg">John Smith</a></li>
+					</ul>
+				</div>
+
+				<div id="profile-follow" class="hidden profile-content">
+					<div class="font-medium text-xl mb-2">People that you follow:</div>
+					<ul>
+						<li class="flex items-center gap-4">
+							<a href="#" class="text-lg">Bill Smith</a>
+							<a href="#" class="text-white bg-sky-500 py-1 px-4 rounded-md hover:bg-sky-600">Unfollow</a>
+						</li>
+					</ul>
+				</div>
+
+				<div id="profile-liked" class="hidden profile-content">
+					<div class="font-medium text-xl mb-2">Posts you liked:</div>
+					<ul>
+						<li><a href="#" class="text-lg">Post title</a></li>
+					</ul>
+				</div>
+			</div>
+
+		</div>
+	</div>
+{% endblock %}

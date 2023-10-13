@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profile
+{% endblock %}
+
+{% block body %}
+	<div class="container mx-auto my-12 border-b border-gray-400 pb-4">
+		<h1 class="text-5xl font-semibold mb-4">Profile</h1>
+	</div>
+	<div class="container mx-auto">
+		<div class="shadow-md p-6 mb-6 rounded-md">
+			{{ include('dashboard/_form_profile_info.html.twig') }}
+		</div>
+		<div class="shadow-md p-6 mb-6 rounded-md">
+			{{ include('dashboard/_form_profile_image.html.twig') }}
+		</div>
+		<div class="shadow-md p-6 mb-6 rounded-md">
+			{{ include('dashboard/_form_profile_password.html.twig') }}
+		</div>
+		<div class="shadow-md p-6 mb-6 rounded-md">
+			{{ include('dashboard/_form_profile_delete.html.twig') }}
+		</div>
+	</div>
+{% endblock %}

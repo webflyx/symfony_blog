@@ -1,0 +1,18 @@
+<div class="text-xl font-medium mb-2">Profile Image</div>
+<div class="text-gray-600 mb-6">Update your profile image</div>
+
+<img width="250" height="250" src="https://static.vecteezy.com/system/resources/previews/019/896/008/original/male-user-avatar-icon-in-flat-design-style-person-signs-illustration-png.png"/>
+
+<form action="{{ path('app_profile') }}" method="POST" class="mt-6">
+
+	<div class="border border-sky-300 rounded-md p-6">
+		<label>
+			<span class="font-medium mr-4">Choose File</span>
+			<input type="file" name="profile-image" class=""/>
+		</label>
+	</div>
+	<div class="text-red-600 pl-4 mt-1">Error Message</div>
+
+	<button class="mt-4 w-full bg-sky-200 py-2 px-6 rounded-md hover:bg-sky-300">Save<span class="ml-3">✅</span>
+	</button>
+</form>

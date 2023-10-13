@@ -1,0 +1,15 @@
+<div class="text-xl font-medium mb-2">Profile Delete</div>
+<div class="text-gray-600 mb-6">Here you can delete your profile.</div>
+
+<div class="text-xl">Are you sure to delete your account?</div>
+<p class="text-gray-600 mb-6">All your data will be permanently delete. Please enter your password for confirm to delete your account.</p>
+
+<form action="{{ path('app_profile') }}" method="POST">
+	<div class="flex flex-col mb-8">
+		<label>Current Password</label>
+		<input type="password" name="profile-password-curr" class="border rounded-md border-gray-400 p-4 mt-4"/>
+		<div class="text-red-600 pl-4 mt-1">Error Message</div>
+	</div>
+	
+    <button class="mt-4 text-white w-full bg-red-600 py-2 px-6 rounded-md hover:bg-red-700">Delete Account</button>
+</form>
