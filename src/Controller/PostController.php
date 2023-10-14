@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Posts;
 use App\Form\PostType;
+use App\Repository\PostsRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -59,10 +60,30 @@ class PostController extends AbstractController
 
     #[Route('/post/{id}/edit', methods:['GET', 'POST'], name: 'posts.edit', priority:2)]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
-    public function edit(): Response
+    public function edit(EntityManagerInterface $entityManager, Request $request, Posts $post): Response
     {
-        //return $this->redirectToRoute('posts.index');
-        return $this->render('post/edit.html.twig');
+
+        $form = $this->createForm(PostType::class, $post);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $post = $form->getData();
+            //$post->setAuthor($this->getUser());
+            $post->setCreated(new DateTime());
+            $entityManager->persist($post);
+            $entityManager->flush();
+
+
+            //Flash messages
+            $this->addFlash('success', 'Post Updated!');
+
+            //Redirect after sent
+            return $this->redirectToRoute('posts.index');
+        }    
+
+        return $this->render('post/edit.html.twig', [
+            'form' => $form
+        ]);
     }
 
     #[Route('/post/{id}/delete', methods:[']\'POST'], name: 'posts.delete', priority:2)]

@@ -10,7 +10,13 @@
 		{% if is_granted('IS_AUTHENTICATED_FULLY') %}
 			<div>
 				<span>{% trans %}Logged as{% endtrans %}:</span>
-				<a class="hover:text-gray-600" href="{{ path('app_dashboard') }}">Jonh Smith</a>
+				<a class="hover:text-gray-600" href="{{ path('app_dashboard') }}">
+					{% if app.user.userProfile.name is defined %}
+						{{ app.user.userProfile.name }}
+					{% else %}
+						{{ app.user.email }}
+					{% endif %}
+				</a>
 			</div>
 			<a class="border border-indigo-200 bg-indigo-200 rounded-full px-4 py-2 hover:bg-indigo-500 hover:text-white hover:border-indigo-500" href="{{ path('posts.new') }}">{% trans %}New Post{% endtrans %}</a>
 			<a class="border border-indigo-200 bg-indigo-200 rounded-full px-4 py-2 hover:bg-indigo-500 hover:text-white hover:border-indigo-500" href="{{ path('app_logout') }}">{% trans %}Logout{% endtrans %}</a>

@@ -1,16 +1,21 @@
 <div class="text-xl font-medium mb-2">Profile Info</div>
 <div class="text-gray-600 mb-6">Update your profile info</div>
 
-<form action="{{ path('app_profile', {id:app.user.id}) }}" method="POST">
-	<div class="flex flex-col mb-8">
-		<label>Name</label>
-		<input type="text" value="OLD VALUE" placeholder="Peter" name="profile-name" id="profile-name" class="border rounded-md border-gray-400 p-4 mt-4"/>
-		<div class="text-red-600 pl-4 mt-1">Error Message</div>
+<div class="container mx-auto mt-4">
+	{{ form_start(formUserInfo) }}
+	<div class="flex gap-4 items-center">
+		{% set name_error = form_errors(formUserInfo.name) ? 'text-red-600' : '' %}
+		{{ form_label(formUserInfo.name, 'Name', {'label_attr':{'class': (name_error)~' block text-sm text-gray-700 font-medium'}}) }}
+		{{ form_widget(formUserInfo.name, { 'value' : currName, 'attr': {'class': 'block w-full shadow-sm border border-gray-300 mt-1 p-2 rounded-sm'} })}}
+		<div class="text-red-600">{{ form_errors(formUserInfo.name) }}</div>
 	</div>
-	<div class="flex flex-col mb-8">
-		<label>Email</label>
-		<input type="email" value="OLD VALUE" placeholder="peter@gmail.com" name="profile-email" id="profile-email" class="border rounded-md border-gray-400 p-4 mt-4"/>
-		<div class="text-red-600 pl-4 mt-1">Error Message</div>
+	<div class="flex gap-4 items-center">
+		{% set email_error = form_errors(formUserInfo.email) ? 'text-red-600' : '' %}
+		{{ form_label(formUserInfo.email, 'Email', {'label_attr':{'class': (email_error)~' block text-sm text-gray-700 font-medium'}}) }}
+		{{ form_widget(formUserInfo.email, { 'value' : currEmail, 'attr': {'class': 'block w-full shadow-sm border border-gray-300 mt-1 p-2 rounded-sm'} })}}
+		<div class="text-red-600">{{ form_errors(formUserInfo.email) }}</div>
 	</div>
-    <button class="mt-4 w-full bg-sky-200 py-2 px-6 rounded-md hover:bg-sky-300">Save<span class="ml-3">✅</span></button>
-</form>
+
+	<button type="submit" class="mt-4 w-full bg-sky-200 p-4 rounded-md hover:bg-sky-300">Save</button>
+	{{ form_end(formUserInfo) }}
+</div>
