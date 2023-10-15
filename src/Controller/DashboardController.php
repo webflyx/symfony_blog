@@ -8,13 +8,12 @@ use App\Entity\UserProfile;
 use App\Form\UserDeleteType;
 use App\Form\UserImageType;
 use App\Form\UserPasswordType;
+use App\Services\ImageUploader;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class DashboardController extends AbstractController
@@ -26,7 +25,7 @@ class DashboardController extends AbstractController
     }
 
     #[Route('/dashboard/profile/{id}', name: 'app_profile')]
-    public function profile(EntityManagerInterface $entityManager, Request $request, SluggerInterface $sluger, User $user, UserPasswordHasherInterface $userPasswordHasher): Response
+    public function profile(EntityManagerInterface $entityManager, Request $request, ImageUploader $imageUploader, User $user, UserPasswordHasherInterface $userPasswordHasher): Response
     {
 
         // User Image
@@ -37,27 +36,11 @@ class DashboardController extends AbstractController
             $profileImageFile = $formUserImage->get('profileImage')->getData();
 
             if ($profileImageFile) {
-                $originalFileName = pathinfo(
-                    $profileImageFile->getClientOriginalName(),
-                    PATHINFO_FILENAME
-                );
-                $safeFileName = $sluger->slug($originalFileName);
-                $newFileName = $safeFileName . '-' . uniqid() . '.' . $profileImageFile->guessExtension();
-
-                //dd($originalFileName, $safeFileName, $newFileName);
-
-                try {
-                    $profileImageFile->move(
-                        $this->getParameter('profiles_directory'),
-                        $newFileName
-                    );
-                } catch (FileException $e) {
-                }
+                $newFileName = $imageUploader->upload($profileImageFile);
 
                 $profile = $user->getUserProfile() ?? new UserProfile();
                 $profile->setImage($newFileName);
                 $user->setUserProfile($profile);
-
 
                 $entityManager->persist($profile);
                 $entityManager->flush();

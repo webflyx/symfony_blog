@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Posts;
 use App\Form\PostType;
 use App\Repository\PostsRepository;
+use App\Repository\UserRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,16 +18,20 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class PostController extends AbstractController
 {
     #[Route('/{_locale}', methods:['GET'], name: 'posts.index')]
-    public function index(string $_locale = 'en'): Response
+    public function index(Request $request, PostsRepository $posts, string $_locale = 'en'): Response
     {
-        return $this->render('post/index.html.twig');
+        $postsAll = $posts->findAllPosts($request->query->getInt('page', 1));
+
+        return $this->render('post/index.html.twig', [
+            'posts' => $postsAll
+        ]);
     }
     
     #[Route('{_locale}/post/{id}/', methods:['GET'], name: 'posts.single')]
-    public function show($id): Response
+    public function show(Posts $post): Response
     {
         return $this->render('post/single.html.twig', [
-            'id' => $id
+            'post' => $post
         ]);
     }
 
@@ -40,7 +45,7 @@ class PostController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $post = $form->getData();
-            //$post->setAuthor($this->getUser());
+            $post->setAuthor($this->getUser());
             $post->setCreated(new DateTime());
             $entityManager->persist($post);
             $entityManager->flush();
@@ -69,7 +74,7 @@ class PostController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $post = $form->getData();
             //$post->setAuthor($this->getUser());
-            $post->setCreated(new DateTime());
+            $post->setUpdated(new DateTime());
             $entityManager->persist($post);
             $entityManager->flush();
 
@@ -82,24 +87,31 @@ class PostController extends AbstractController
         }    
 
         return $this->render('post/edit.html.twig', [
-            'form' => $form
+            'form' => $form,
+            'post' => $post
         ]);
     }
 
-    #[Route('/post/{id}/delete', methods:[']\'POST'], name: 'posts.delete', priority:2)]
+    #[Route('/post/{id}/delete', name: 'posts.delete', priority:2)]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
-    public function delete(): Response
+    public function delete(EntityManagerInterface $entityManager, Posts $post): Response
     {
-        //return $this->redirectToRoute('posts.index');
-        return new Response('Post Deleted');
+        $entityManager->remove($post);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Post Deleted!');
+        return $this->redirectToRoute('posts.index');
     }
 
     #[Route('/posts/user/{id}', methods:['GET'], name: 'posts.user')]
-    public function user($id): Response
+    public function user($id, Request $request, PostsRepository $posts, UserRepository $users): Response
     {
-        return new Response(
-            '<h1>TEST</h1>' . $id
-        );
+        $postsAll = $posts->findAllPostsByUser($request->query->getInt('page', 1), $id);
+
+        return $this->render('post/index.html.twig', [
+            'posts' => $postsAll,
+            'author' => $users->findBy(['id' => $id])[0]
+        ]);
     }
 
     #[Route('/toggleFollow/{user}', methods:['GET'], name: 'toggleFollow')]

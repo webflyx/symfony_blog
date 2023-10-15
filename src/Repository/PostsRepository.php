@@ -3,8 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Posts;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\PaginatorInterface;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<Posts>
@@ -16,9 +17,35 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class PostsRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    private $paginator;
+
+    public function __construct(ManagerRegistry $registry, PaginatorInterface $paginator)
     {
         parent::__construct($registry, Posts::class);
+        $this->paginator = $paginator;
+    }
+
+    public function findAllPosts(int $page) 
+    {
+        $dbquery = $this->createQueryBuilder('p')
+        // ->leftJoin('p.author', 'a')
+        // ->addSelect('a')
+        ->getQuery()
+        ->getResult();
+        
+        return $this->paginator->paginate($dbquery, $page, 3);
+    }
+
+    public function findAllPostsByUser(int $page, $userId) 
+    {
+        $dbquery = $this->createQueryBuilder('p')
+            ->leftJoin('p.author', 'a')
+            ->where('p.author = :id')
+            ->setParameter('id', $userId)
+            ->getQuery()
+            ->getResult();
+        
+        return $this->paginator->paginate($dbquery, $page, 3);
     }
 
 //    /**

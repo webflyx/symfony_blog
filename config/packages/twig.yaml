@@ -3,6 +3,7 @@ twig:
     
     globals:
         profiles: '%profiles%'
+        images: '%images%'
 
 when@test:
     twig:
