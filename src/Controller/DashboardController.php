@@ -21,7 +21,12 @@ class DashboardController extends AbstractController
     #[Route('/dashboard', name: 'app_dashboard')]
     public function dashboard(): Response
     {
-        return $this->render('dashboard/dashboard.html.twig', []);
+        $user = $this->getUser();
+    
+        return $this->render('dashboard/dashboard.html.twig', [
+            'following' => $user->getFollowing(),
+            'followers' => $user->getFollowers()
+        ]);
     }
 
     #[Route('/dashboard/profile/{id}', name: 'app_profile')]

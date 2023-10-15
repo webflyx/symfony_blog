@@ -12,11 +12,11 @@
 				<img src="{{ images ~ 'user.png' }}"/>
 			{% endif %}
 			<a href="{{ path('posts.user', {id:post.author.id}) }}" class="text-sky-600 hover:underline mr-4">{% if post.author.userProfile.name is defined %}{{post.author.userProfile.name}}{% else %}{{post.author.email}}{% endif %}</a>
-			{% if post.author != app.user %}
-				<a href="{{ path('toggleFollow', {user:1}) }}" class="rounded-md bg-indigo-400 px-4 py-2 text-white hover:bg-indigo-500">Follow</a>
+			{% if post.author != app.user and (isFollowing is null or isFollowing|length == 0) %}
+				<a href="{{ path('toggleFollow', {user:post.author.id}) }}" class="rounded-md bg-indigo-400 px-4 py-2 text-white hover:bg-indigo-500">Follow</a>
 			{% endif %}
-			{% if is_granted('IS_AUTHENTICATED_FULLY') and post.author != app.user %}
-				<a href="{{ path('toggleFollow', {user:1}) }}" class="rounded-md bg-indigo-400 px-4 py-2 text-white hover:bg-indigo-500">Unfollow</a>
+			{% if is_granted('IS_AUTHENTICATED_FULLY') and post.author != app.user and isFollowing %}
+				<a href="{{ path('toggleFollow', {user:post.author.id}) }}" class="rounded-md bg-indigo-400 px-4 py-2 text-white hover:bg-indigo-500">Unfollow</a>
 			{% endif %}
 		</div>
 	</div>

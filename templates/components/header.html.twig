@@ -11,7 +11,7 @@
 			<div>
 				<span>{% trans %}Logged as{% endtrans %}:</span>
 				<a class="hover:text-gray-600" href="{{ path('app_dashboard') }}">
-					{% if app.user.userProfile.name is defined %}
+					{% if app.user.userProfile.name is defined and app.user.userProfile.name != ''  %}
 						{{ app.user.userProfile.name }}
 					{% else %}
 						{{ app.user.email }}

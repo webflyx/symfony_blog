@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Posts;
+use App\Entity\User;
 use App\Form\PostType;
 use App\Repository\PostsRepository;
 use App\Repository\UserRepository;
@@ -14,10 +15,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[Route('/', requirements:['_locale'=>'en|uk'])]
+#[Route('/', requirements: ['_locale' => 'en|uk'])]
 class PostController extends AbstractController
 {
-    #[Route('/{_locale}', methods:['GET'], name: 'posts.index')]
+    #[Route('/{_locale}', methods: ['GET'], name: 'posts.index')]
     public function index(Request $request, PostsRepository $posts, string $_locale = 'en'): Response
     {
         $postsAll = $posts->findAllPosts($request->query->getInt('page', 1));
@@ -26,16 +27,19 @@ class PostController extends AbstractController
             'posts' => $postsAll
         ]);
     }
-    
-    #[Route('{_locale}/post/{id}/', methods:['GET'], name: 'posts.single')]
-    public function show(Posts $post): Response
+
+    #[Route('{_locale}/post/{id}/', methods: ['GET'], name: 'posts.single')]
+    public function show(Posts $post, UserRepository $users): Response
     {
+        $isFollowing = $users->isFollowing($this->getUser(), $post->getAuthor());
+
         return $this->render('post/single.html.twig', [
-            'post' => $post
+            'post' => $post,
+            'isFollowing' => $isFollowing,
         ]);
     }
 
-    #[Route('/post/new', methods:['GET', 'POST'], name: 'posts.new', priority:2)]
+    #[Route('/post/new', methods: ['GET', 'POST'], name: 'posts.new', priority: 2)]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function new(EntityManagerInterface $entityManager, Request $request): Response
     {
@@ -56,14 +60,14 @@ class PostController extends AbstractController
 
             //Redirect after sent
             return $this->redirectToRoute('posts.index');
-        }    
+        }
 
         return $this->render('post/new.html.twig', [
             'form' => $form
         ]);
     }
 
-    #[Route('/post/{id}/edit', methods:['GET', 'POST'], name: 'posts.edit', priority:2)]
+    #[Route('/post/{id}/edit', methods: ['GET', 'POST'], name: 'posts.edit', priority: 2)]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function edit(EntityManagerInterface $entityManager, Request $request, Posts $post): Response
     {
@@ -84,7 +88,7 @@ class PostController extends AbstractController
 
             //Redirect after sent
             return $this->redirectToRoute('posts.index');
-        }    
+        }
 
         return $this->render('post/edit.html.twig', [
             'form' => $form,
@@ -92,7 +96,7 @@ class PostController extends AbstractController
         ]);
     }
 
-    #[Route('/post/{id}/delete', name: 'posts.delete', priority:2)]
+    #[Route('/post/{id}/delete', name: 'posts.delete', priority: 2)]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function delete(EntityManagerInterface $entityManager, Posts $post): Response
     {
@@ -103,7 +107,7 @@ class PostController extends AbstractController
         return $this->redirectToRoute('posts.index');
     }
 
-    #[Route('/posts/user/{id}', methods:['GET'], name: 'posts.user')]
+    #[Route('/posts/user/{id}', methods: ['GET'], name: 'posts.user')]
     public function user($id, Request $request, PostsRepository $posts, UserRepository $users): Response
     {
         $postsAll = $posts->findAllPostsByUser($request->query->getInt('page', 1), $id);
@@ -114,12 +118,22 @@ class PostController extends AbstractController
         ]);
     }
 
-    #[Route('/toggleFollow/{user}', methods:['GET'], name: 'toggleFollow')]
+    #[Route('/toggleFollow/{user}', methods: ['GET'], name: 'toggleFollow')]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
-    public function toggleFollow($user): Response
+    public function toggleFollow(User $user, UserRepository $users, Request $request, EntityManagerInterface $entityManager): Response
     {
-        return new Response(
-            '<h1>TEST</h1>' . $user
-        );
+        $currUser = $this->getUser();   
+
+        $isFollowing = $users->isFollowing($currUser, $user);
+
+        if ($isFollowing) {
+            $currUser->removeFollowing($user);
+        } else {
+            $currUser->addFollowing($user);
+        }
+
+        $entityManager->flush();
+
+        return $this->redirect($request->headers->get('referer'));
     }
 }

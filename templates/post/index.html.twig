@@ -19,7 +19,7 @@
 				<h2 class="font-medium text-3xl mb-2">{{ post.title }}</h2>
 				<div class="mb-4 text-gray-500 font-sm flex gap-2 items-center">
 					{{ include('svg/calendar.html.twig', {w:20, h:20}) }}
-					{{ post.created|date('d.m.Y') }} by <a class="underline text-gray-700" href="{{ path('posts.user', { id: post.author.id }) }}">{% if post.author.userProfile.name is defined %}{{post.author.userProfile.name}}{% else %}{{post.author.email}}{% endif %}</a>
+					{{ post.created|date('d.m.Y') }} by <a class="underline text-gray-700" href="{{ path('posts.user', { id: post.author.id }) }}">{% if post.author.userProfile.name is defined and post.author.userProfile.name != '' %}{{post.author.userProfile.name}}{% else %}{{post.author.email}}{% endif %}</a>
 				</div>
 				<p class="text-gray-700">{{ post.content|slice(0,200) }}...</p>
 				<a href="{{ path('posts.single', {id: post.id}) }}" class="mt-6 block text-red-700 py-5 hover:underline">Read More &rarr;</a>

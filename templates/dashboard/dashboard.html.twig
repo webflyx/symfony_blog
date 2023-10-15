@@ -1,13 +1,17 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Dashboard{% endblock %}
+{% block title %}Dashboard
+{% endblock %}
 
 {% block body %}
+
 	<div class="container mx-auto my-12 border-b border-gray-400 pb-4">
 		<h1 class="text-5xl font-semibold mb-4">Dashboard</h1>
 	</div>
 	<div class="container mx-auto">
-		<div>You're logged in! <a href="{{ path('app_profile', {id:app.user.id}) }}" class="font-medium text-sky-800 underline">Your Profile</a></div>
+		<div>You're logged in!
+			<a href="{{ path('app_profile', {id:app.user.id}) }}" class="font-medium text-sky-800 underline">Your Profile</a>
+		</div>
 
 		<div class="mt-10">
 
@@ -21,17 +25,43 @@
 				<div id="profile-followers" class="profile-content">
 					<div class="font-medium text-xl mb-2">People that follow you:</div>
 					<ul>
-						<li><a href="#" class="text-lg">John Smith</a></li>
+						{% if followers|length > 0 %}
+							{% for follower in followers %}
+								<li>
+									<a href="{{ path('posts.user', {id:follower.id}) }}" class="text-lg">
+										{% if follower.userProfile.name is defined and follower.userProfile.name != '' %}
+											{{ follower.userProfile.name }}
+										{% else %}
+											{{ follower.email }}
+										{% endif %}
+									</a>
+								</li>
+							{% endfor %}
+						{% else %}
+							<div>You don't have followers.</div>
+						{% endif %}
 					</ul>
 				</div>
 
 				<div id="profile-follow" class="hidden profile-content">
 					<div class="font-medium text-xl mb-2">People that you follow:</div>
 					<ul>
-						<li class="flex items-center gap-4">
-							<a href="#" class="text-lg">Bill Smith</a>
-							<a href="#" class="text-white bg-sky-500 py-1 px-4 rounded-md hover:bg-sky-600">Unfollow</a>
-						</li>
+						{% if following|length > 0 %}
+							{% for follow in following %}
+								<li class="flex items-center gap-4">
+									<a href="{{ path('posts.user', {id:follow.id}) }}" class="text-lg">
+										{% if follow.userProfile.name is defined and follow.userProfile.name != '' %}
+											{{ follow.userProfile.name }}
+										{% else %}
+											{{ follow.email }}
+										{% endif %}
+									</a>
+									<a href="{{ path('toggleFollow', {user:follow.id}) }}" class="text-white bg-sky-500 py-1 px-4 rounded-md hover:bg-sky-600">Unfollow</a>
+								</li>
+							{% endfor %}
+						{% else %}
+							<div>You are not subscribed to other users.</div>
+						{% endif %}
 					</ul>
 				</div>
 
