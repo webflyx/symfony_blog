@@ -22,9 +22,14 @@ class PostController extends AbstractController
     public function index(Request $request, PostsRepository $posts, string $_locale = 'en'): Response
     {
         $postsAll = $posts->findAllPosts($request->query->getInt('page', 1));
+        $topPost = $posts->topPost();
+        
+        // $test = $posts->searchQuery('reiciendis');
+        // dd($test);
 
         return $this->render('post/index.html.twig', [
-            'posts' => $postsAll
+            'posts' => $postsAll,
+            'topPost' => $topPost[0]['post']
         ]);
     }
 

@@ -3,14 +3,15 @@
 		{{ include ("svg/search.html.twig", {w: '20', h: '20'}) }}
 		<input data-model="query" value={{ query }} class="border-b border-gray-300 px-2 py-1" type="text" name="search" placeholder="Search..."/>
 	</div>
+    {% if this.posts is defined and this.posts|length > 0 %}
     <div class="absolute t-0 l-0 w-full bg-white py-4 px-2 shadow-md">
         <ul class="flex flex-col gap-3 ">
             {% for post in this.posts %}
             <li class="border-b border-transparent hover:border-gray-300">
-                <a href="#">{{ query }}</a>
-                {# <a href="{{ path('posts.single', { id: post.id }) }}">{{ post.title }}</a> #}
+                <a href="{{ path('posts.single', { id: post.id }) }}">{{ post.title }}</a>
             </li>
            {% endfor %}
         </ul>
     </div>
+    {% endif %}
 </div>

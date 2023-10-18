@@ -25,18 +25,18 @@ class PostsRepository extends ServiceEntityRepository
         $this->paginator = $paginator;
     }
 
-    public function findAllPosts(int $page) 
+    public function findAllPosts(int $page)
     {
         $dbquery = $this->createQueryBuilder('p')
-        // ->leftJoin('p.author', 'a')
-        // ->addSelect('a')
-        ->getQuery()
-        ->getResult();
-        
+            // ->leftJoin('p.author', 'a')
+            // ->addSelect('a')
+            ->getQuery()
+            ->getResult();
+
         return $this->paginator->paginate($dbquery, $page, 3);
     }
 
-    public function findAllPostsByUser(int $page, $userId) 
+    public function findAllPostsByUser(int $page, $userId)
     {
         $dbquery = $this->createQueryBuilder('p')
             ->leftJoin('p.author', 'a')
@@ -44,7 +44,7 @@ class PostsRepository extends ServiceEntityRepository
             ->setParameter('id', $userId)
             ->getQuery()
             ->getResult();
-        
+
         return $this->paginator->paginate($dbquery, $page, 3);
     }
 
@@ -76,28 +76,53 @@ class PostsRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-//    /**
-//     * @return Posts[] Returns an array of Posts objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('p.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function topPost(): array
+    {
+        return $this->createQueryBuilder('p')
+            ->select('p AS post')
+            ->innerJoin('p.usersLiked', 'l')
+            ->groupBy('p')
+            ->addSelect('COUNT(l) AS likes')
+            ->orderBy('likes', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getResult();
+    }
 
-//    public function findOneBySomeField($value): ?Posts
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    public function searchQuery(string $query): array
+    {
+        return $this->createQueryBuilder('p')
+            ->select('p.title')
+            ->addSelect('p.id')
+            ->where('p.title LIKE :query')
+            //->orWhere('p.content LIKE :query')
+            ->setParameter('query', '%'.$query.'%')
+            ->getQuery()
+            ->getResult();
+    }
+
+    //    /**
+    //     * @return Posts[] Returns an array of Posts objects
+    //     */
+    //    public function findByExampleField($value): array
+    //    {
+    //        return $this->createQueryBuilder('p')
+    //            ->andWhere('p.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->orderBy('p.id', 'ASC')
+    //            ->setMaxResults(10)
+    //            ->getQuery()
+    //            ->getResult()
+    //        ;
+    //    }
+
+    //    public function findOneBySomeField($value): ?Posts
+    //    {
+    //        return $this->createQueryBuilder('p')
+    //            ->andWhere('p.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->getQuery()
+    //            ->getOneOrNullResult()
+    //        ;
+    //    }
 }

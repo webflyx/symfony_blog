@@ -2,9 +2,10 @@
 
 namespace App\Twig\Components;
 
-use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+use App\Repository\PostsRepository;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
+use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 
 #[AsLiveComponent('search')]
 final class SearchComponent
@@ -14,8 +15,19 @@ final class SearchComponent
     #[LiveProp(writable: true)]
     public string $query = '';
 
+    private $posts;
+
+    public function __construct(PostsRepository $posts)
+    {
+        $this->posts = $posts;
+    }
+
     public function getPosts(): array
     {
-        return $this->query ? [['title' => $this->query]] : [];
+        if (strlen($this->query) > 1) {
+            return $this->query ? $this->posts->searchQuery($this->query) : [];
+        } else {
+            return [];
+        }
     }
 }

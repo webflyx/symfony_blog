@@ -3,35 +3,77 @@
 {% block body %}
 	<div class="container mx-auto my-12 border-b border-gray-400 pb-4">
 		<h1 class="text-5xl font-semibold mb-4">
-			Latest Posts 
+			Latest Posts
 			{% if author is defined %}
-				by {% if author.userProfile.name is defined %}{{author.userProfile.name}}{% else %}{{author.email}}{% endif %}
+				by
+				{% if author.userProfile.name is defined %}
+					{{author.userProfile.name}}
+				{% else %}
+					{{author.email}}
+				{% endif %}
 			{% endif %}
 		</h1>
 		<div class="text-gray-600">Blog created with Symfony & Tailwind CSS</div>
 	</div>
 
 	<div class="container mx-auto">
+
+		<div class="border-b border-green-700 pb-4 flex gap-10 mt-12">
+				<div>TOP POST</div>
+				<div>
+					<h2 class="text-green-800 font-medium text-3xl mb-2">{{ topPost.title }}</h2>
+					<div class="mb-4 text-gray-500 font-sm flex gap-2 items-center">
+						{{ include('svg/calendar.html.twig', {w:20, h:20}) }}
+						{{ topPost.created|date('d.m.Y') }}
+						by
+						<a class="underline text-gray-700" href="{{ path('posts.user', { id: topPost.author.id }) }}">
+							{% if topPost.author.userProfile.name is defined and topPost.author.userProfile.name != '' %}
+								{{topPost.author.userProfile.name}}
+							{% else %}
+								{{topPost.author.email}}
+							{% endif %}
+						</a>
+					</div>
+					<p class="text-gray-700">{{ topPost.content|slice(0,200) }}...</p>
+					<a href="{{ path('posts.single', {id: topPost.id}) }}" class="mt-6 block text-red-700 py-5 hover:underline">Read More &rarr;</a>
+
+					{% if app.user == topPost.author %}
+						<div class="mt-2 flex items-center gap-4">
+							<a href="{{ path('posts.edit', {id: topPost.id}) }}">{{ include("svg/edit.html.twig", {w: 20, h:20}) }}</a>
+							<a href="{{ path('posts.delete', {id: topPost.id}) }}">{{ include("svg/trash.html.twig", {w: 20, h:20}) }}</a>
+						</div>
+					{% endif %}
+				</div>
+			</div>
+
 		{% for post in posts %}
 			<div class="border-b border-gray-400 pb-4 flex gap-10 mt-12">
-			<div>IMAGE</div>
-			<div>
-				<h2 class="font-medium text-3xl mb-2">{{ post.title }}</h2>
-				<div class="mb-4 text-gray-500 font-sm flex gap-2 items-center">
-					{{ include('svg/calendar.html.twig', {w:20, h:20}) }}
-					{{ post.created|date('d.m.Y') }} by <a class="underline text-gray-700" href="{{ path('posts.user', { id: post.author.id }) }}">{% if post.author.userProfile.name is defined and post.author.userProfile.name != '' %}{{post.author.userProfile.name}}{% else %}{{post.author.email}}{% endif %}</a>
-				</div>
-				<p class="text-gray-700">{{ post.content|slice(0,200) }}...</p>
-				<a href="{{ path('posts.single', {id: post.id}) }}" class="mt-6 block text-red-700 py-5 hover:underline">Read More &rarr;</a>
-
-				{% if app.user == post.author %}
-					<div class="mt-2 flex items-center gap-4">
-						<a href="{{ path('posts.edit', {id: post.id}) }}">{{ include("svg/edit.html.twig", {w: 20, h:20}) }}</a>
-						<a href="{{ path('posts.delete', {id: post.id}) }}">{{ include("svg/trash.html.twig", {w: 20, h:20}) }}</a>
+				<div>IMAGE</div>
+				<div>
+					<h2 class="font-medium text-3xl mb-2">{{ post.title }}</h2>
+					<div class="mb-4 text-gray-500 font-sm flex gap-2 items-center">
+						{{ include('svg/calendar.html.twig', {w:20, h:20}) }}
+						{{ post.created|date('d.m.Y') }}
+						by
+						<a class="underline text-gray-700" href="{{ path('posts.user', { id: post.author.id }) }}">
+							{% if post.author.userProfile.name is defined and post.author.userProfile.name != '' %}
+								{{post.author.userProfile.name}}
+							{% else %}
+								{{post.author.email}}
+							{% endif %}
+						</a>
 					</div>
-				{% endif %}
+					<p class="text-gray-700">{{ post.content|slice(0,200) }}...</p>
+					<a href="{{ path('posts.single', {id: post.id}) }}" class="mt-6 block text-red-700 py-5 hover:underline">Read More &rarr;</a>
+
+					{% if app.user == post.author %}
+						<div class="mt-2 flex items-center gap-4">
+							<a href="{{ path('posts.edit', {id: post.id}) }}">{{ include("svg/edit.html.twig", {w: 20, h:20}) }}</a>
+							<a href="{{ path('posts.delete', {id: post.id}) }}">{{ include("svg/trash.html.twig", {w: 20, h:20}) }}</a>
+						</div>
+					{% endif %}
+				</div>
 			</div>
-		</div>
 		{% endfor %}
 
 		{{ knp_pagination_render(posts) }}
