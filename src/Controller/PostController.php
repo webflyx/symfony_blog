@@ -77,9 +77,10 @@ class PostController extends AbstractController
     }
 
     #[Route('/post/{id}/edit', methods: ['GET', 'POST'], name: 'posts.edit', priority: 2)]
-    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    //#[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function edit(EntityManagerInterface $entityManager, Request $request, Posts $post): Response
     {
+        $this->denyAccessUnlessGranted('POST_EDIT', $post);
 
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
@@ -106,9 +107,11 @@ class PostController extends AbstractController
     }
 
     #[Route('/post/{id}/delete', name: 'posts.delete', priority: 2)]
-    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    // #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function delete(EntityManagerInterface $entityManager, Posts $post): Response
     {
+        $this->denyAccessUnlessGranted('POST_DELETE', $post);
+
         $entityManager->remove($post);
         $entityManager->flush();
 
