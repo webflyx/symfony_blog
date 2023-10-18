@@ -67,8 +67,12 @@
 
 				<div id="profile-liked" class="hidden profile-content">
 					<div class="font-medium text-xl mb-2">Posts you liked:</div>
-					<ul>
-						<li><a href="#" class="text-lg">Post title</a></li>
+					<ul class="list-disc pl-4">
+						{% for likedPost in app.user.likedPosts %}
+							<li class="mb-2">
+								<a class="hover:text-sky-700" href="{{ path('posts.single', {id: likedPost.id}) }}">{{ likedPost.title }}</a>
+							</li>
+						{% endfor %}
 					</ul>
 				</div>
 			</div>

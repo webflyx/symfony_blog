@@ -48,6 +48,34 @@ class PostsRepository extends ServiceEntityRepository
         return $this->paginator->paginate($dbquery, $page, 3);
     }
 
+    public function isLiked($authUser, $postId): array
+    {
+        return $this->createQueryBuilder('p')
+            ->select('p.id')
+            ->andWhere('p.id = :id')
+            ->andWhere('usersLiked.id = :authUser')
+            ->innerJoin('p.usersLiked', 'usersLiked')
+            ->setParameter('id', $postId)
+            ->setParameter('authUser', $authUser)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function isDisliked($authUser, $postId): array
+    {
+        return $this->createQueryBuilder('p')
+            ->select('p.id')
+            ->andWhere('p.id = :id')
+            ->andWhere('usersDisliked.id = :authUser')
+            ->innerJoin('p.usersDisliked', 'usersDisliked')
+            ->setParameter('id', $postId)
+            ->setParameter('authUser', $authUser)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getResult();
+    }
+
 //    /**
 //     * @return Posts[] Returns an array of Posts objects
 //     */

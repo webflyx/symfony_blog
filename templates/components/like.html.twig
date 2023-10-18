@@ -1,0 +1,40 @@
+{% if is_granted('IS_AUTHENTICATED_FULLY') %}
+	<div class="container mx-auto flex items-center gap-4 mt-6" {{ attributes }}>
+		{% if isLiked %}
+			<a id="{{ post.id }}" title="like" class="flex gap-2 items-center" data-action="live#action" data-action-name="undoLike">
+				{{ include('svg/like.html.twig', {w: 20, h:20, fill:'#419712'}) }}
+				<span>({{ post.usersLiked|length }})</span>
+			</a>
+		{% else %}
+			<a id="{{ post.id }}" title="like" class="flex gap-2 items-center" data-action="live#action" data-action-name="like">
+				{{ include('svg/like.html.twig', {w: 20, h:20, fill:'#41971282'}) }}
+				<span>({{ post.usersLiked|length }})</span>
+			</a>
+		{% endif %}
+		
+		{% if isDisliked %}
+			<a class="flex gap-2 items-center" data-action="live#action" data-action-name="undoDislike">
+				{{ include('svg/like.html.twig', {w: 20, h:20, fill:'#d72626', unlike: true}) }}
+				<span>({{ post.usersDisliked|length }})</span>
+			</a>
+		{% else %}
+			<a class="flex gap-2 items-center" data-action="live#action" data-action-name="dislike">
+				{{ include('svg/like.html.twig', {w: 20, h:20, fill:'#d7262682', unlike: true}) }}
+				<span>({{ post.usersDisliked|length }})</span>
+			</a>
+		{% endif %}
+
+	</div>
+{% else %}
+	<div class="container mx-auto flex items-center gap-4 mt-6" {{ attributes }}>
+		<a title="like" class="flex gap-2 items-center">
+			{{ include('svg/like.html.twig', {w: 20, h:20, fill:'#41971282'}) }}
+			<span>({{ post.usersLiked|length }})</span>
+		</a>
+		<a class="flex gap-2 items-center">
+			{{ include('svg/like.html.twig', {w: 20, h:20, fill:'#d7262682', unlike: true}) }}
+			<span>({{ post.usersDisliked|length }})</span>
+		</a>
+		<span class="text-gray-600">Login for Like/Dislike</span>
+	</div>
+{% endif %}

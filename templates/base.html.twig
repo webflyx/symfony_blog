@@ -17,7 +17,7 @@
 	</head>
 	<body class="container max-w-7xl mx-auto">
 
-		{{ include ("components/header.html.twig") }}
+		{{ include ("shares/header.html.twig") }}
 
 		{% for message in app.flashes('success') %}
 			<div class="container mx-auto rounded-md border border-green-600 bg-green-200 p-4 my-4">{{message}}</div>
@@ -25,8 +25,8 @@
 
 		{% block body %}{% endblock %}
 
-		{{ include ("components/footer.html.twig") }}
+		{{ include ("shares/footer.html.twig") }}
 
-		{{ include ("components/notification.html.twig") }}
+		{{ include ("shares/notification.html.twig") }}
 	</body>
 </html>

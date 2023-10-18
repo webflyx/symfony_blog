@@ -29,13 +29,17 @@ class PostController extends AbstractController
     }
 
     #[Route('{_locale}/post/{id}/', methods: ['GET'], name: 'posts.single')]
-    public function show(Posts $post, UserRepository $users): Response
+    public function show(Posts $post, UserRepository $users, PostsRepository $posts): Response
     {
         $isFollowing = $users->isFollowing($this->getUser(), $post->getAuthor());
+        $isLiked = $posts->isLiked($this->getUser(), $post->getId());
+        $isDisliked = $posts->isDisliked($this->getUser(), $post->getId());
 
         return $this->render('post/single.html.twig', [
             'post' => $post,
             'isFollowing' => $isFollowing,
+            'isLiked' => $isLiked,
+            'isDisliked' => $isDisliked,
         ]);
     }
 

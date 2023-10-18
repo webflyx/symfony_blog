@@ -3,7 +3,7 @@
 		{% include "svg/logo.html.twig" %}
 		<a class="text-2xl font-medium text-gray-700" href="{{ path('posts.index') }}">Symfony Blog</a>
 
-		{% include "components/search.html.twig" %}
+		{{ component('search') }}
 	</div>
 
 	<div id="main-menu" class="absolute top-24 gap-4 items-center hidden md:flex md:relative md:top-0">
