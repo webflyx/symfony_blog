@@ -11,6 +11,7 @@
         "doctrine/doctrine-migrations-bundle": "^3.2",
         "doctrine/orm": "^2.16",
         "knplabs/knp-paginator-bundle": "^6.2",
+        "lexik/jwt-authentication-bundle": "^2.19",
         "pusher/pusher-php-server": "^7.2",
         "symfony/console": "6.3.*",
         "symfony/dotenv": "6.3.*",
