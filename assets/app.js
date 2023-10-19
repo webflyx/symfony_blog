@@ -20,7 +20,9 @@ document.getElementById('hamburger').addEventListener('click', () => {
 })
 
 // Show / Hide Alerts
-function showAlert($id, $time) {
+function showAlert($id, $time, data = '') {
+    document.getElementById('notification-content').innerHTML = data;
+    document.getElementById($id).classList.remove('invisible', 'opacity-0');
     setTimeout(() => {
         document.getElementById($id).classList.add('invisible', 'opacity-0');
     }, $time);
@@ -30,10 +32,6 @@ function showAlert($id, $time) {
 document.getElementById('notification-close').addEventListener('click', () => {
     showAlert('notification', 0);
 })
-
-if (!document.getElementById('notification').classList.contains('invisible')) {
-    showAlert('notification', 5000);
-}
 
 //Profile
 const profileTabs = document.querySelectorAll('.profile-tab');
@@ -56,3 +54,11 @@ profileTabs.forEach(el => {
 
     })
 });
+
+
+var pusher = new Pusher('b4acbf76e7cae651140b', {cluster: 'eu'});
+var channel = pusher.subscribe('symfony-blog');
+channel.bind('new-post-event', function (data) {
+    showAlert('notification', 10000, data);
+});
+

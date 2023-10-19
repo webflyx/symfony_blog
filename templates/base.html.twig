@@ -12,8 +12,13 @@
 		{% block stylesheets %}{% endblock %}
 		{{ encore_entry_link_tags('app') }}
 
-		{% block javascripts %}{% endblock %}
-		{{ encore_entry_script_tags('app') }}
+		{% block javascripts %}
+	
+			{{ encore_entry_script_tags('app') }}
+			
+			<script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+
+		{% endblock %}
 	</head>
 	<body class="container max-w-7xl mx-auto">
 

@@ -30,7 +30,7 @@ class Posts
     #[ORM\Column(type: Types::TEXT)]
     #[Assert\Type('string')]
     #[Assert\Length(
-        min: 50,
+        min: 5,
         max: 1000,
         minMessage: 'Content is short, 50 characters is the minimum',
         maxMessage: 'Content is long, 1000 characters is the maximum'

@@ -2,18 +2,19 @@
 
 namespace App\Controller;
 
-use App\Entity\Posts;
-use App\Entity\User;
-use App\Form\PostType;
-use App\Repository\PostsRepository;
-use App\Repository\UserRepository;
 use DateTime;
+use Pusher\Pusher;
+use App\Entity\User;
+use App\Entity\Posts;
+use App\Form\PostType;
+use App\Repository\UserRepository;
+use App\Repository\PostsRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/', requirements: ['_locale' => 'en|uk'])]
 class PostController extends AbstractController
@@ -23,7 +24,7 @@ class PostController extends AbstractController
     {
         $postsAll = $posts->findAllPosts($request->query->getInt('page', 1));
         $topPost = $posts->topPost();
-        
+
         // $test = $posts->searchQuery('reiciendis');
         // dd($test);
 
@@ -50,7 +51,7 @@ class PostController extends AbstractController
 
     #[Route('/post/new', methods: ['GET', 'POST'], name: 'posts.new', priority: 2)]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
-    public function new(EntityManagerInterface $entityManager, Request $request): Response
+    public function new(EntityManagerInterface $entityManager, Request $request, Pusher $pusher): Response
     {
         $post = new Posts();
         $form = $this->createForm(PostType::class, $post);
@@ -66,6 +67,13 @@ class PostController extends AbstractController
 
             //Flash messages
             $this->addFlash('success', 'Post Added!');
+
+            //Pusher
+            $pusher->trigger(
+                'symfony-blog',
+                'new-post-event',
+                'New post added - <a class="underline" href="' . $this->generateUrl('posts.single', ['id' => $post->getId()]) . '">' . $post->getTitle() . '</a>'
+            );
 
             //Redirect after sent
             return $this->redirectToRoute('posts.index');
@@ -134,7 +142,7 @@ class PostController extends AbstractController
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function toggleFollow(User $user, UserRepository $users, Request $request, EntityManagerInterface $entityManager): Response
     {
-        $currUser = $this->getUser();   
+        $currUser = $this->getUser();
 
         $isFollowing = $users->isFollowing($currUser, $user);
 
