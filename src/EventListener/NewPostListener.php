@@ -28,7 +28,7 @@ class NewPostListener
         $users = $entityManager->getRepository(User::class)->findAll();
 
         foreach ($users as $user){
-            $author = $entity->getAuthor()->getUserProfile()->getName() ? $entity->getAuthor()->getUserProfile()->getName() : $entity->getAuthor()->getEmail();
+            $author = $entity->getAuthor()?->getUserProfile()?->getName() ? $entity->getAuthor()->getUserProfile()->getName() : $entity->getAuthor()->getEmail();
             
             $email = (new Email())
                 ->from('hello@blog.com')

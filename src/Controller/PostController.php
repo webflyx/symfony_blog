@@ -26,11 +26,11 @@ class PostController extends AbstractController
         $topPost = $posts->topPost();
 
         // $test = $posts->searchQuery('reiciendis');
-        // dd($test);
+        //dd($topPost);
 
         return $this->render('post/index.html.twig', [
             'posts' => $postsAll,
-            'topPost' => $topPost[0]['post']
+            'topPosts' => $topPost
         ]);
     }
 
